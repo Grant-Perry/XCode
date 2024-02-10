@@ -13,7 +13,14 @@ import SwiftUI
 struct BigPolyApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            PolyView()
         }
     }
 }
+
+#Preview {
+	PolyView()
+}
+
+
+
