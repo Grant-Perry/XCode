@@ -42,7 +42,8 @@ struct FullMapView: View {
 
 		Map {
 			MapPolyline(coordinates: holdCoords)
-				.stroke(gradient, style: stroke)
+				.stroke(gradient,
+						  style: stroke)
 
 			Annotation(
 				"Start",

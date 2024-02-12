@@ -8,8 +8,12 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct ContentView: View {
+
+	@State var home = CLLocationCoordinate2D(latitude: 37.000914, longitude: -76.442160)
+
     var body: some View {
         VStack {
             Image(systemName: "globe")

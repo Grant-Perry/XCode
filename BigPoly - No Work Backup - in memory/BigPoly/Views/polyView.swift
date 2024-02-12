@@ -13,7 +13,6 @@ import HealthKit
 struct PolyView: View {
 	@State private var workouts: [HKWorkout] = []
 	@State private var isLoading = true
-	@State private var workoutLimit = 150
 
 	var body: some View {
 		NavigationView {
@@ -23,6 +22,7 @@ struct PolyView: View {
 				List(workouts, id: \.uuid) { workout in
 					NavigationLink(destination: FullMapView(workout: workout)) {
 						WorkoutRouteView(workout: workout)
+						Text("\(workout.startDate, style: .date)")
 					}
 				}
 				.navigationTitle("Workouts")
@@ -38,18 +38,13 @@ struct PolyView: View {
 	private func loadWorkouts() async {
 		do {
 			try await WorkoutCore.shared.requestHealthKitPermission()
-			workouts = try await WorkoutCore.shared.fetchLastWorkouts(limit: workoutLimit)
-//			print("WORKOUT: \(workouts)\n------------------------------\n\n")
+			workouts = try await WorkoutCore.shared.fetchLastWorkouts(limit: 100)
 			isLoading = false
 		} catch {
 			print("Error loading workouts: \(error)")
 			isLoading = false
 		}
 	}
-}
-
-#Preview {
-	PolyView()
 }
 
 
