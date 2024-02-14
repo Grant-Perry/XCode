@@ -31,6 +31,7 @@
 		9B5269E82B7A6F6D00695BA6 /* WorkoutRouteViewButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5269E72B7A6F6D00695BA6 /* WorkoutRouteViewButtons.swift */; };
 		9B5269EA2B7A8D6200695BA6 /* DELETETHIS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5269E92B7A8D6200695BA6 /* DELETETHIS.swift */; };
 		9B5269EC2B7AC1BF00695BA6 /* DateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5269EB2B7AC1BF00695BA6 /* DateExt.swift */; };
+		9B5269EE2B7C027D00695BA6 /* WorkoutRouteEXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5269ED2B7C027D00695BA6 /* WorkoutRouteEXT.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,7 @@
 		9B5269E72B7A6F6D00695BA6 /* WorkoutRouteViewButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRouteViewButtons.swift; sourceTree = "<group>"; };
 		9B5269E92B7A8D6200695BA6 /* DELETETHIS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DELETETHIS.swift; sourceTree = "<group>"; };
 		9B5269EB2B7AC1BF00695BA6 /* DateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExt.swift; sourceTree = "<group>"; };
+		9B5269ED2B7C027D00695BA6 /* WorkoutRouteEXT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRouteEXT.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +175,7 @@
 				9B5269DB2B77D8A800695BA6 /* CLLArrayExt.swift */,
 				9B5269E12B789E2B00695BA6 /* ViewExt.swift */,
 				9B5269EB2B7AC1BF00695BA6 /* DateExt.swift */,
+				9B5269ED2B7C027D00695BA6 /* WorkoutRouteEXT.swift */,
 			);
 			path = Ext;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 				9B4643422B75239B00833432 /* WorkoutCore.swift in Sources */,
 				9B5269DA2B77C92E00695BA6 /* CustomMapView.swift in Sources */,
 				9B5269D82B77C40A00695BA6 /* IdentifiableCoordinate.swift in Sources */,
+				9B5269EE2B7C027D00695BA6 /* WorkoutRouteEXT.swift in Sources */,
 				9B5269DE2B78091900695BA6 /* WorkoutRouteView.swift in Sources */,
 				9B46433C2B751D5100833432 /* CityCoords.swift in Sources */,
 				9B5269EA2B7A8D6200695BA6 /* DELETETHIS.swift in Sources */,

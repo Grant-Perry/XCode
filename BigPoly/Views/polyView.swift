@@ -18,7 +18,7 @@ struct PolyView: View {
 	var body: some View {
 		NavigationView {
 			if isLoading {
-				ProgressView("Loading Workouts...")
+				LoadingView()
 			} else {
 				List(workouts, id: \.uuid) { workout in
 					NavigationLink(destination: FullMapView(workout: workout)) {

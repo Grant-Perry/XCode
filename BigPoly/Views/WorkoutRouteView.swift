@@ -17,7 +17,6 @@ struct WorkoutRouteView: View {
 	@State var workout: HKWorkout
 	@State var address: Address? = nil
 	@State var date: Date = Date()
-	@State var distance: Double = 0
 	@State var latitude: Double = 37.000914
 	@State var longitude: Double = -76.442160
 	@State var isLoading = true
@@ -39,23 +38,22 @@ struct WorkoutRouteView: View {
 						Text(workout.startDate.formatted(as: "MMM d, yy"))
 							.font(.system(size: 15))
 							.foregroundColor(.white)
-							.horizontallyCentered()
-//							.padding(.trailing, 10)
-//							.padding(.top)
+							.rightJustify()
+							.padding(EdgeInsets(top: 3, leading: 0, bottom: 0, trailing: 26))
 
-						Spacer()
+//						Spacer()
 						Text(address?.city ?? "Loading...")
-							.font(.system(size: 20)).bold()
+							.font(.system(size: 22)).bold()
 							.foregroundColor(.white)
 							.padding(.leading)
 							.leftJustify()
-						
+
 						VStack(alignment: .leading, spacing: 1) {
 							Text(address?.address ?? "Loading...")
 								.font(.system(size: 17))
 								.frame(width: 120, height: 16)
-
-							Text("Distance: \(String(format: "%.2f", distance))")
+							Spacer()
+							Text("Distance: \(String(format: "%.2f", WorkoutCore.shared.distance))")
 								.rightJustify()
 								.padding(.trailing, 30)
 								.font(.system(size: 18).bold())
@@ -73,7 +71,6 @@ struct WorkoutRouteView: View {
 								}
 							}
 						}
-//						.font(.system(size: 12))
 						.foregroundColor(.white)
 						.padding(.leading, 20) // indent the text
 						.leftJustify()
@@ -85,15 +82,13 @@ struct WorkoutRouteView: View {
 						}
 					}
 					.frame(width: UIScreen.main.bounds.width * 0.5, height: heights)
-					.background(Color.blue.gradient)
-					.cornerRadius(10)
+					.background(.blue.gradient)
+					.cornerRadius(10, corners: [.topLeft, .bottomLeft])
 					.leftJustify()
 
-// MARK: -> Map View
+// MARK: -> Map container
 					if let coordinate = locations?.first?.coordinate {
-
 						Map(position: $position) {
-
 							Annotation(
 								"❤️",
 								coordinate: coordinate,
@@ -101,19 +96,15 @@ struct WorkoutRouteView: View {
 							) {
 //								Image(systemName: "")
 //									.imageScale(.medium)
-//									.padding(4)
-//									.foregroundStyle(.white)
-//									.background(Color.gpRed)
-//									.cornerRadius(4)
 							}
-
 //							Marker("Start", systemImage: "figure-wave", coordinate: coordinate)
 						}
 						.mapControlVisibility(.hidden)
 						.mapStyle(.hybrid(elevation: .realistic ))
 						.disabled(true)
 						.frame(width: UIScreen.main.bounds.width * 0.35, height: heights)
-						.cornerRadius(10)
+						.cornerRadius(10, corners: [.topRight, .bottomRight])
+
 						.padding(.leading, -20)
 					} else {
 						Text("No Map Data")
@@ -123,7 +114,10 @@ struct WorkoutRouteView: View {
 					}
 				}
 			}
-			.frame(width: UIScreen.main.bounds.width * 0.75, height: heights)
+// MARK: - Full Container
+			.frame(width: UIScreen.main.bounds.width * 0.65, height: heights)
+//			.frame(width: UIScreen.main.bounds.width * 0.9, height: heights)
+			.padding([.top, .horizontal])
 			.onAppear() {
 				Task {
 					print("TASK # 2: Get the routes")
@@ -143,7 +137,7 @@ struct WorkoutRouteView: View {
 
 					// calculate this workout's distance
 					print("TASK # 4: Calculate distance\n")
-					distance = locations?.calcDistance ?? 99
+					WorkoutCore.shared.distance = locations?.calcDistance ?? 99
 
 					print("lat: \(latitude)  long: \(longitude)")
 
@@ -151,34 +145,9 @@ struct WorkoutRouteView: View {
 					self.isLoading = false
 				}
 			}
-			.frame(width: UIScreen.main.bounds.width * 0.9, height: heights)
-			.padding([.top, .horizontal])
+
 		}
 		.preferredColorScheme(.light)
 	}
 }
 
-extension WorkoutRouteView {
-	func fetchAndUpdateAddress(latitude: Double, longitude: Double) async {
-		let geocoder = CLGeocoder()
-		let location = CLLocation(latitude: latitude, longitude: longitude)
-
-		do {
-			let placemarks = try await geocoder.reverseGeocodeLocation(location)
-			if let placemark = placemarks.first {
-				// Update the address state
-				address = Address(
-					address: placemark.thoroughfare ?? "",
-					city: placemark.locality ?? "",
-					zipCode: placemark.postalCode ?? "",
-					state: placemark.administrativeArea ?? "",
-					latitude: latitude,
-					longitude: longitude,
-					name: placemark.name
-				)
-			}
-		} catch let error {
-			print("Address not found: \(error.localizedDescription)")
-		}
-	}
-}

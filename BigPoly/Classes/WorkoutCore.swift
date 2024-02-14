@@ -15,6 +15,7 @@ import Observation
 @Observable
 class WorkoutCore {
 	static let shared = WorkoutCore()
+	var distance: Double = 0
 	private let healthStore = HKHealthStore()
 
 	private init() {}

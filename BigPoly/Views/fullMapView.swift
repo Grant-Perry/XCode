@@ -2,16 +2,16 @@
 //   BigPoly
 //
 //   Created by: Grant Perry on 2/8/24 at 9:56 AM
-//     Modified: 
+//     Modified: Tuesday February 13, 2024 at 3:21:42 PM (on the plane to ATL)
 //
 //  Copyright © 2024 Delicious Studios, LLC. - Grant Perry
-//
 
 import SwiftUI
 import MapKit
 import HealthKit
 
-
+/// This is the full map view when the user selects the NavigatiponLink on the list view from WorkoutRouteView
+///
 struct FullMapView: View {
 	let workout: HKWorkout
 	@State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
@@ -27,19 +27,24 @@ struct FullMapView: View {
 
 
 	let gradient = LinearGradient(
-		colors: [.gpPink, .gpGreen, .gpBlue],
+		colors: [.gpBlue, .gpYellow, .gpGreen],
 		startPoint: .leading,
 		endPoint: .trailing)
 	
 	let stroke = StrokeStyle(
-		lineWidth: 4,
+		lineWidth: 6,
 		lineCap: .round,
-		lineJoin: .round,
-		dash: [15, 10])
+		lineJoin: .round)
+	//,
+//		dash: [15, 10])
 
 	var body: some View {
-
-
+//
+//		Text("Distance: \(String(format: "%.2f", WorkoutCore.shared.distance))")
+//			.rightJustify()
+//			.padding(.trailing, 30)
+//			.font(.system(size: 18).bold())
+		
 		Map {
 			MapPolyline(coordinates: holdCoords)
 				.stroke(gradient, style: stroke)
@@ -73,27 +78,46 @@ struct FullMapView: View {
 //			Marker("Start", coordinate: startWorkout)
 //			Marker("End", coordinate: endWorkout)
 		}
-
 		.onAppear {
 			Task {
+				// let's async get all the route data
 				await loadRouteData()
 			}
+		}
+// MARK: - safeArea for the metrics
+		.safeAreaInset(edge: .top) {
+			HStack {
+				Spacer ()
+				Text("Distance: \(String(format: "%.2f", WorkoutCore.shared.distance))")
+					.rightJustify()
+					.padding(.trailing, 30)
+					.font(.system(size: 18).bold())
+
+				Spacer ()
+			}
+			.frame(width: UIScreen.main.bounds.width, height: 75)
+			.background(.blue.gradient).opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
+			.foregroundColor(.white)
+			.shadow(color: .gray, radius: 5, x: 0, y: 2) // Add the shadow modifier
+
+
+//			.ignoresSafeArea(.all)
 		}
 		.mapStyle(.imagery(elevation: .realistic))
 		.background(.clear)
 
 	}
 
+
+
 	private func loadRouteData() async {
 		do {
 			let coordinates = try await WorkoutCore.shared.fetchRouteData(for: workout)
 			if !coordinates.isEmpty {
-				// Wrap each CLLocationCoordinate2D in IdentifiableCoordinate
 				holdCoords = coordinates
 				poly = MKPolyline(coordinates: coordinates, count: coordinates.count)
 				startWorkout = coordinates.first!
 				endWorkout = coordinates.last!
-//				print("poly = \(poly)\ncoordinates = \(coordinates)")
 				identifiableRouteCoordinates = coordinates.map { IdentifiableCoordinate(coordinate: $0) }
 				region.center = coordinates.first ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
 			}
@@ -105,77 +129,4 @@ struct FullMapView: View {
 	}
 }
 
-//   THIS WORKS -
-//		Map(coordinateRegion: $region,
-//			 showsUserLocation: true,
-//			 annotationItems: identifiableRouteCoordinates) { identifiableCoord in
-//
-//			MapPin(coordinate: identifiableCoord.coordinate, tint: .blue)
-//		}
-//		.onAppear {
-//			Task {
-//				await loadRouteData()
-//			}
-//		}
 
-//struct MapPolylineOverlay: View {
-//	var polyline: MKPolyline
-//
-//	var body: some View {
-//		// Custom view to represent the polyline if necessary.
-//	}
-//}
-
-
-// Assuming you have a MapView that can take coordinates.
-//struct MapView: View {
-//	var coordinates: [CLLocationCoordinate2D]
-//
-//	var body: some View {
-//		// Your implementation to display the map and polyline
-//		Text("Map Placeholder")
-//	}
-//}
-
-
-//struct FullMapView: View {
-//	var workoutRoute: HKWorkoutRoute
-//	@State private var region = MKCoordinateRegion()
-//	@State private var polyline = MKPolyline()
-//
-//	var body: some View {
-//		Map(coordinateRegion: $region, showsUserLocation: false, userTrackingMode: nil, annotationItems: [polyline]) { item in
-//			MapOverlay(coordinate: item.coordinate, anchorPoint: CGPoint(x: 0.5, y: 0.5))
-//		}
-//		.onAppear {
-//			Task {
-//				await loadRouteData()
-//			}
-//		}
-//		.edgesIgnoringSafeArea(.all)
-//		.navigationTitle("Workout Route")
-//	}
-//
-//	private func loadRouteData() async {
-//		let locations = await WorkoutCore.shared.getCLocationDataForRoute(routeToExtract: workoutRoute)
-//		updateMapRegionAndPolyline(with: locations)
-//	}
-//
-//	private func updateMapRegionAndPolyline(with locations: [CLLocation]) {
-//		guard !locations.isEmpty else { return }
-//
-//		let coordinates = locations.map { $0.coordinate }
-//		self.polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
-//
-//		let region = MKCoordinateRegion(center: coordinates.first!, latitudinalMeters: 5000, longitudinalMeters: 5000)
-//		self.region = region
-//	}
-//}
-
-// Define MapOverlay if needed or use existing Map annotations/overlays as per your app's design.
-
-
-//		Map {
-//			MapPolyline (coordinates: identifiableRouteCoordinates.coordinate)
-//				.stroke(gradient, style: stroke)
-//		}

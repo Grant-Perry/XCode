@@ -13,63 +13,104 @@ import MapKit
 struct DeleteThis: View {
 	@State var home = CLLocationCoordinate2D(latitude: 37.000914, longitude: -76.442160)
 	@State private var position: MapCameraPosition = .automatic
+	@State var isLoading = false
+	var heights = 125.0
 
 	var body: some View {
-		VStack(alignment: .leading) { // Align VStack to leading
-			HStack(spacing: 15) {
-				// MARK: - Address Container
-				VStack {
-					Spacer()
-					Text("Newport News")
-						.font(.system(size: 20)).bold()
-						.foregroundColor(.white)
-						.padding(.leading)
-						.leftJustify()
-					VStack(alignment: .leading, spacing: 1) {
-						Text("5912 Huntington Ave.")
-						Text(Date(), style: .date)
-						Text("2.3")
-							.rightJustify()
-							.padding(.trailing)
-							.font(.system(size: 14).bold())
-						Text("miles")
-							.rightJustify()
-							.padding(.trailing)
-							.font(.system(size: 8))
-					}
-					.font(.system(size: 12))
-					.foregroundColor(.white)
-					.padding(.leading, 25) // indent the text
-					.leftJustify()
-					Spacer()
-				}
-//				.frame(width: 200, height: 100)
-				.frame(width: UIScreen.main.bounds.width * 0.5, height: 100)
-				.background(Color.blue.gradient)
-				.cornerRadius(10)
-				.leftJustify()
+		VStack(alignment: .leading, spacing: 0) {
 
-				// MARK: - Map View
-//				HStack {
-					Map(position: $position) {
-
-						Marker("Route Start", coordinate: home)
-
-					}
-					.mapControlVisibility(.hidden)
-					.mapStyle(.hybrid(elevation: .realistic ))
-					.disabled(true)
-					.frame(width: UIScreen.main.bounds.width * 0.35, height: .infinity)
+			if isLoading {
+				ProgressView()
+					.frame(maxWidth: .infinity, maxHeight: .infinity)
+					.background(Color.blue.gradient)
 					.cornerRadius(10)
-					.padding(.leading, -25)
-//				}
+			} else {
+				HStack(spacing: 0) {
+					HStack {
+						// MARK: - Address Container
+						HStack {
+							VStack {
+								Text(Date().formatted(as: "MMM d, yy"))
+									.font(.system(size: 15))
+									.foregroundColor(.white)
+									.rightJustify()
+									.padding(EdgeInsets(top: 3, leading: 0, bottom: 0, trailing: 26))
+								Text("Newport News")
+									.font(.system(size: 22)).bold()
+									.foregroundColor(.white)
+									.padding(.leading)
+									.leftJustify()
+
+								VStack(alignment: .leading, spacing: 1) {
+									Text("5912 Huntington Ave")
+										.font(.system(size: 17))
+										.frame(width: 120, height: 16)
+									Spacer()
+									Text("Distance: \(String(format: "%.2f", 2.34))")
+										.rightJustify()
+										.padding(.trailing, 30)
+										.font(.system(size: 18).bold())
+
+
+									// the date was here
+								}
+
+								HStack {
+									Text("miles")
+										.rightJustify()
+										.padding(.trailing, 30)
+										.font(.system(size: 8))
+								}
+								.foregroundColor(.white)
+								.padding(.leading, 20) // indent the text
+								.leftJustify()
+							}
+						}
+
+						Spacer()
+							.frame(width: UIScreen.main.bounds.width * 0.5, height: heights)
+							.background(.blue.gradient)
+							.cornerRadius(10, corners: [.topLeft, .bottomLeft])
+							.leftJustify()
+
+
+						// MARK: -> Map View
+						HStack {
+							if  !isLoading {
+								Map(position: $position) {
+									Annotation(
+										"❤️",
+										coordinate: home,
+										anchor: .bottom
+									) {
+										//								Image(systemName: "")
+										//									.imageScale(.medium)
+									}
+									//							Marker("Start", systemImage: "figure-wave", coordinate: coordinate)
+								}
+								.mapControlVisibility(.hidden)
+								.mapStyle(.hybrid(elevation: .realistic ))
+								.disabled(true)
+								.frame(width: UIScreen.main.bounds.width * 0.35, height: heights)
+								.cornerRadius(10, corners: [.topRight, .bottomRight])
+
+								.padding(.leading, -20)
+							}
+							else {
+								Text("No Map Data")
+									.frame(width: UIScreen.main.bounds.width * 0.5, height: heights)
+									.background(Color.gray)
+									.cornerRadius(10)
+							}
+						}
+
+
+					}
+				}
 			}
-			.frame(width: UIScreen.main.bounds.width * 0.75, height: 100)
-//			.padding()
 		}
 	}
 }
-
 
 #Preview {
 	DeleteThis()
